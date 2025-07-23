@@ -30,8 +30,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     );
 
     final response = await http.get(url);
-
     final data = jsonDecode(response.body);
+
     if (data['success']) {
       setState(() {
         order = data['order'];
@@ -47,34 +47,25 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   }
 
   Future<void> updateOrderStatus(String newStatus) async {
-  debugPrint('Mengirim update status: $newStatus');
-
-  final response = await http.post(
-    Uri.parse('http://mediquick.my.id/orders/update_status.php'),
-    body: {
-      'order_id': widget.orderId,
-      'status': newStatus,
-    },
-  );
-
-  debugPrint('Response body: ${response.body}');
-
-  final data = jsonDecode(response.body);
-
-  if (data['success']) {
-    setState(() {
-      order?['status'] = newStatus;
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Status diperbarui menjadi $newStatus')),
+    final response = await http.post(
+      Uri.parse('http://mediquick.my.id/orders/update_status.php'),
+      body: {'order_id': widget.orderId, 'status': newStatus},
     );
-  } else {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(data['message'] ?? 'Gagal memperbarui status')),
-    );
+
+    final data = jsonDecode(response.body);
+    if (data['success']) {
+      setState(() {
+        order?['status'] = newStatus;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Status diperbarui menjadi $newStatus')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(data['message'] ?? 'Gagal memperbarui status')),
+      );
+    }
   }
-}
-
 
   String formatRupiah(dynamic value) {
     final formatter = NumberFormat.currency(
@@ -216,6 +207,14 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
+                              'Pembeli: ${order?['user_name'] ?? '-'}',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
                               'ID Pesanan: ${widget.orderId}',
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
@@ -247,6 +246,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 16),
                     const Text(
                       'Daftar Produk:',
@@ -255,10 +255,16 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     const SizedBox(height: 8),
                     buildProductList(),
                     buildSummary(),
-                    const SizedBox(height: 12),
-                    buildActionButton(status),
+                    const SizedBox(height: 100), // Padding for bottom nav
                   ],
                 ),
+              ),
+      bottomNavigationBar:
+          (status == 'done' || status == 'cancelled')
+              ? null
+              : SafeArea(
+                minimum: const EdgeInsets.all(16),
+                child: buildActionButton(status),
               ),
     );
   }

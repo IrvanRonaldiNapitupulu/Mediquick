@@ -20,6 +20,7 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<CartProvider>(context);
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5EDED),
       appBar: AppBar(
@@ -29,9 +30,11 @@ class CartScreen extends StatelessWidget {
         centerTitle: true,
         title: const Text('Keranjang', style: TextStyle(color: Colors.black)),
       ),
-      body: Column(
+      body: Stack(
         children: [
-          Expanded(
+          // Content
+          Padding(
+            padding: const EdgeInsets.only(bottom: 100),
             child: ListView.builder(
               padding: const EdgeInsets.all(16),
               itemCount: cart.items.length,
@@ -41,7 +44,7 @@ class CartScreen extends StatelessWidget {
                   margin: const EdgeInsets.only(bottom: 16),
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Color(0xFFF5EDED),
+                    color: const Color(0xFFF5EDED),
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: const [
                       BoxShadow(
@@ -60,7 +63,6 @@ class CartScreen extends StatelessWidget {
                           cart.notifyListeners();
                         },
                       ),
-
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.network(
@@ -169,80 +171,81 @@ class CartScreen extends StatelessWidget {
               },
             ),
           ),
-          Container(
-            color: const Color(0xFFDDE3EB),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Row(
-              children: [
-                Consumer<CartProvider>(
-                  builder:
-                      (_, cart, __) => Row(
-                        children: [
-                          Checkbox(
-                            value: cart.allSelected,
-                            onChanged: (value) {
-                              cart.toggleSelectAll(value ?? false);
-                            },
-                          ),
-                          const Text('Semua'),
-                        ],
-                      ),
-                ),
 
-                const Spacer(),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text("Total (${cart.items.length} item)"),
-                    Text(
-                      formatRupiah(cart.totalPrice),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 12),
-                ElevatedButton(
-                  onPressed:
-                      cart.selectedItems.isEmpty
-                          ? null
-                          : () {
-                            final selectedItem = cart.selectedItems.first;
-
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder:
-                                    (context) => CheckoutScreen(
-                                      productName: selectedItem.name,
-                                      productImage: selectedItem.imageUrl,
-                                      quantity: selectedItem.quantity,
-                                      productPrice: selectedItem.price,
-                                      productId:
-                                          selectedItem
-                                              .productId, // ✅ Tidak error lagi
-                                      apotekId:
-                                          selectedItem
-                                              .apotekId, // ✅ Tidak error lagi
-                                    ),
-                              ),
-                            );
-                          },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF7FA1C3),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 12,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+          // Floating Bottom Bar
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 45,
+            child: Container(
+              color: const Color(0xFFDDE3EB),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Row(
+                children: [
+                  Consumer<CartProvider>(
+                    builder:
+                        (_, cart, __) => Row(
+                          children: [
+                            Checkbox(
+                              value: cart.allSelected,
+                              onChanged: (value) {
+                                cart.toggleSelectAll(value ?? false);
+                              },
+                            ),
+                            const Text('Semua'),
+                          ],
+                        ),
                   ),
-                  child: const Text('Checkout'),
-                ),
-              ],
+                  const Spacer(),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text("Total (${cart.selectedItems.length} item)"),
+                      Text(
+                        formatRupiah(cart.totalPrice),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: 12),
+                  ElevatedButton(
+                    onPressed:
+                        cart.selectedItems.isEmpty
+                            ? null
+                            : () {
+                              final selectedItem = cart.selectedItems.first;
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) => CheckoutScreen(
+                                        productName: selectedItem.name,
+                                        productImage: selectedItem.imageUrl,
+                                        quantity: selectedItem.quantity,
+                                        productPrice: selectedItem.price,
+                                        productId: selectedItem.productId,
+                                        apotekId: selectedItem.apotekId,
+                                      ),
+                                ),
+                              );
+                            },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF7FA1C3),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text('Checkout'),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

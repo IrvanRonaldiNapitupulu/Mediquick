@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mediquick/screens/login/login_screen.dart';
+import 'package:mediquick/widget/Kelola%20Akun/manage_account_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/services.dart'; // Optional, untuk SystemNavigator.pop() jika ingin keluar aplikasi
 
 class User {
   final String name;
@@ -66,7 +66,7 @@ class _GreetingSectionState extends State<GreetingSection> {
         });
       }
     } catch (e) {
-      if (!mounted) return; // Cegah error jika widget sudah disposed
+      if (!mounted) return;
       setState(() {
         errorMessage = 'Terjadi error: $e';
         isLoading = false;
@@ -78,12 +78,96 @@ class _GreetingSectionState extends State<GreetingSection> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
 
-    // Navigasi ke halaman login dan hapus semua route sebelumnya
     Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(
-        builder: (context) => const LoginScreen(),
-      ), // ganti dengan file login kamu
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
       (route) => false,
+    );
+  }
+
+  void _showSettingsMenu() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // agar bisa lebih tinggi
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (_) {
+        return DraggableScrollableSheet(
+          expand: false,
+          initialChildSize: 0.4, // 40% tinggi layar
+          minChildSize: 0.25,
+          maxChildSize: 0.6,
+          builder: (context, scrollController) {
+            return SingleChildScrollView(
+              controller: scrollController,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    child: Text(
+                      'Pengaturan Akun',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const Divider(),
+
+                  ListTile(
+                    leading: const Icon(Icons.person),
+                    title: const Text("Kelola Akun"),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ManageAccountScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.logout),
+                    title: const Text("Logout"),
+                    onTap: () async {
+                      Navigator.pop(context); // Tutup bottom sheet
+                      final confirm = await showDialog(
+                        context: context,
+                        builder: (BuildContext dialogContext) {
+                          return AlertDialog(
+                            title: const Text("Logout"),
+                            content: const Text(
+                              "Apakah Anda yakin ingin keluar?",
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed:
+                                    () => Navigator.pop(dialogContext, false),
+                                child: const Text("Batal"),
+                              ),
+                              ElevatedButton(
+                                onPressed:
+                                    () => Navigator.pop(dialogContext, true),
+                                child: const Text("Logout"),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      if (confirm == true) {
+                        _logout();
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 24), // 👉 Jarak ekstra bawah
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
@@ -123,32 +207,13 @@ class _GreetingSectionState extends State<GreetingSection> {
             ),
           ],
         ),
-        IconButton(
-          icon: const Icon(Icons.logout, color: Color(0xFF6482AD)),
-          onPressed: () async {
-            final confirm = await showDialog(
-              context: context,
-              builder:
-                  (_) => AlertDialog(
-                    title: const Text("Logout"),
-                    content: const Text("Apakah Anda yakin ingin keluar?"),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, false),
-                        child: const Text("Batal"),
-                      ),
-                      ElevatedButton(
-                        onPressed: () => Navigator.pop(context, true),
-                        child: const Text("Logout"),
-                      ),
-                    ],
-                  ),
-            );
-
-            if (confirm == true) {
-              _logout();
-            }
-          },
+        Row(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.settings, color: Color(0xFF6482AD)),
+              onPressed: _showSettingsMenu,
+            ),
+          ],
         ),
       ],
     );

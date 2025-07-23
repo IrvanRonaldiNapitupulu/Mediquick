@@ -64,26 +64,50 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      bottomNavigationBar:
-          _product != null
-              ? ProductBottomBar(
-                isCheckoutEnabled: true,
-                onCheckout: _goToCheckout,
-                name: _product!.name,
-                imageUrl: _product!.imageUrl!,
-                price: _product!.price,
-                pharmacyName: _product!.pharmacyName,
-                apotekId: _product!.apotekId,
-                productId: _product!.id,
-              )
-              : const SizedBox.shrink(),
       body: SafeArea(
-        child:
+        child: Stack(
+          children: [
             _loading
                 ? const Center(child: CircularProgressIndicator())
                 : _errorMessage != null
                 ? Center(child: Text(_errorMessage!))
                 : _buildProductDetail(),
+
+            // Floating Bottom Bar
+            if (_product != null)
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        offset: Offset(0, -1),
+                        blurRadius: 6,
+                      ),
+                    ],
+                  ),
+                  child: ProductBottomBar(
+                    isCheckoutEnabled: true,
+                    onCheckout: _goToCheckout,
+                    name: _product!.name,
+                    imageUrl: _product!.imageUrl!,
+                    price: _product!.price,
+                    pharmacyName: _product!.pharmacyName,
+                    apotekId: _product!.apotekId,
+                    productId: _product!.id,
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -98,7 +122,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             (context) => CheckoutScreen(
               productName: _product!.name,
               productImage: _product!.imageUrl!,
-              quantity: _quantity, // Gunakan nilai yang dipilih user
+              quantity: _quantity,
               productPrice: _product!.price,
               productId: _product!.id,
               apotekId: _product!.apotekId,
@@ -111,6 +135,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     final product = _product!;
 
     return SingleChildScrollView(
+      padding: const EdgeInsets.only(
+        bottom: 100,
+      ), // Tambahkan padding agar tidak ketutup bottom bar
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:mediquick/screens/Payment/Payment_Screen.dart';
 import 'package:mediquick/screens/apotek/address_screen.dart';
+import 'package:mediquick/screens/apotek/apotek_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mediquick/service/order_service.dart';
 
@@ -82,8 +83,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     try {
       final result = await OrderService.createOrderAndGetSnap(
         userId: userId,
-        apotekId:
-            widget.apotekId,
+        apotekId: widget.apotekId,
         name: name,
         email: userEmail,
         phone: phone,
@@ -111,6 +111,34 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         context,
       ).showSnackBar(SnackBar(content: Text("Terjadi kesalahan: $e")));
     }
+  }
+
+  void showSuccessDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // agar tidak bisa ditutup dengan tap di luar
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Pesanan Berhasil'),
+          content: const Text('Pesanan Anda berhasil dibuat.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Tutup dialog
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                    builder: (context) => ApotekScreen(),
+                  ), // ganti halaman
+                  (Route<dynamic> route) =>
+                      false, // hapus semua halaman sebelumnya
+                );
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> _loadSavedAddress() async {
@@ -348,46 +376,52 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   Widget _buildBottomBar(int totalPembayaran) {
-    return Container(
-      color: const Color(0xFFDDE3EB),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text("Total (1 item)", style: TextStyle(fontSize: 12)),
-                Text(
-                  formatRupiah(totalPembayaran),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+    return SafeArea(
+      minimum: const EdgeInsets.only(bottom: 16), // Jarak dari bawah
+      child: Container(
+        color: const Color(0xFFDDE3EB),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("Total (1 item)", style: TextStyle(fontSize: 12)),
+                  Text(
+                    formatRupiah(totalPembayaran),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          ElevatedButton(
-            onPressed:
-                selectedAddress == null
-                    ? null
-                    : () async {
-                      await submitOrderAndPay(totalPembayaran);
-                    },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF7FA1C3),
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+                ],
               ),
             ),
-            child: const Text(
-              "Bayar Sekarang",
-              style: TextStyle(color: Colors.white),
+            ElevatedButton(
+              onPressed:
+                  selectedAddress == null
+                      ? null
+                      : () async {
+                        await submitOrderAndPay(totalPembayaran);
+                      },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF7FA1C3),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 12,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                "Bayar Sekarang",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

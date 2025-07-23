@@ -70,17 +70,20 @@ class _AddressScreenState extends State<AddressScreen> {
           );
         },
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16),
-        child: ElevatedButton.icon(
-          onPressed: _navigateToAddAddress,
-          icon: const Icon(Icons.add_location_alt_outlined),
-          label: const Text('Tambahkan Alamat'),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF8FAAC7),
-            minimumSize: const Size.fromHeight(50),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+      bottomNavigationBar: SafeArea(
+        minimum: const EdgeInsets.only(bottom: 16),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: ElevatedButton.icon(
+            onPressed: _navigateToAddAddress,
+            icon: const Icon(Icons.add_location_alt_outlined),
+            label: const Text('Tambahkan Alamat'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF8FAAC7),
+              minimumSize: const Size.fromHeight(50),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
           ),
         ),

@@ -53,6 +53,8 @@ class _CategorySectionState extends State<CategorySection> {
     try {
       final pertolongan = await fetchByType('Pertolongan Pertama');
       final kesehatan = await fetchByType('Artikel Kesehatan');
+      if (!mounted)
+        return; // ⛔ Hindari update UI kalau widget sudah tidak aktif
       setState(() {
         pertolonganArticles = pertolongan;
         kesehatanArticles = kesehatan;
@@ -60,6 +62,7 @@ class _CategorySectionState extends State<CategorySection> {
       });
     } catch (e) {
       print('Error fetching articles: $e');
+      if (!mounted) return;
       setState(() => isLoading = false);
     }
   }
@@ -214,7 +217,7 @@ class _CategorySectionState extends State<CategorySection> {
       ],
     );
   }
- 
+
   Widget sectionTitle(String title) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

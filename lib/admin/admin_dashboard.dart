@@ -37,12 +37,38 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   }
 
   Future<void> _logout(BuildContext context) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const LoginScreen()),
+    final shouldLogout = await showDialog<bool>(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Konfirmasi Logout'),
+            content: const Text(
+              'Apakah Anda yakin ingin keluar dari akun Admin?',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Batal'),
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context, true),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                child: const Text('Logout'),
+              ),
+            ],
+          ),
     );
+
+    if (shouldLogout == true) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+      if (context.mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+        );
+      }
+    }
   }
 
   @override
@@ -75,7 +101,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 children: [
                   _buildDashboardCard(
                     icon: Icons.people,
-                    title: "Manajemen User",
+                    title: "Manajemen Apotek",
                     color: Colors.blue,
                     onTap: () {
                       Navigator.push(

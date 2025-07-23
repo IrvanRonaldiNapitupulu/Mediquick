@@ -26,19 +26,24 @@ class _EducationScreenState extends State<EducationScreen> {
   }
 
   Future<void> _fetchArticles() async {
-    try {
-      final articles = await ArticleService().getArticles();
-      setState(() {
-        _articles = articles;
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() => _isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Gagal memuat artikel: $e')),
-      );
-    }
+  try {
+    final articles = await ArticleService().getArticles();
+    if (!mounted) return; // Cegah setState jika widget sudah di-dispose
+
+    setState(() {
+      _articles = articles;
+      _isLoading = false;
+    });
+  } catch (e) {
+    if (!mounted) return; // Cegah setState jika widget sudah di-dispose
+
+    setState(() => _isLoading = false);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Gagal memuat artikel: $e')),
+    );
   }
+}
+
 
   void _onFilterChanged(String value) {
     setState(() {

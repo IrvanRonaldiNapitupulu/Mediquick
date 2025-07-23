@@ -9,10 +9,7 @@ class ChatService {
   Future<int?> createOrGetChat(int userId, int apotekId) async {
     final response = await http.post(
       Uri.parse('$baseUrl/create_or_get_chat.php'),
-      body: {
-        'user_id': userId.toString(),
-        'apotek_id': apotekId.toString(),
-      },
+      body: {'user_id': userId.toString(), 'apotek_id': apotekId.toString()},
     );
 
     if (response.statusCode == 200) {

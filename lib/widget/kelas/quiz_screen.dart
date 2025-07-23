@@ -82,15 +82,38 @@ class _QuizScreenState extends State<QuizScreen> {
       barrierDismissible: false,
       builder:
           (_) => AlertDialog(
-            title: const Text("🎉 Kuis Selesai"),
-            content: Text("Skor kamu: $score dari ${quizzes.length}"),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: const Text("Selamat!", textAlign: TextAlign.center),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.emoji_events, color: Colors.amber[700], size: 60),
+                const SizedBox(height: 16),
+                Text(
+                  "Kuis selesai!\nSkor kamu:",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 18),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  "$score / ${quizzes.length}",
+                  style: const TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blueAccent,
+                  ),
+                ),
+              ],
+            ),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                   Navigator.pop(context);
                 },
-                child: const Text("Tutup"),
+                child: const Text("Kembali"),
               ),
             ],
           ),
@@ -118,23 +141,26 @@ class _QuizScreenState extends State<QuizScreen> {
       appBar: AppBar(
         title: Text("Soal ${currentIndex + 1} / ${quizzes.length}"),
         backgroundColor: Colors.blueAccent,
+        elevation: 0,
       ),
+      backgroundColor: const Color(0xFFF9FAFB),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            // Soal dalam card
+            // Card soal
             Card(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(16),
               ),
-              elevation: 4,
+              color: Colors.white,
+              elevation: 5,
               child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Text(
                   quiz['question'] ?? '-',
                   style: const TextStyle(
-                    fontSize: 18,
+                    fontSize: 20,
                     fontWeight: FontWeight.w600,
                     color: Color(0xFF2D3142),
                   ),
@@ -143,42 +169,38 @@ class _QuizScreenState extends State<QuizScreen> {
             ),
             const SizedBox(height: 24),
 
-            // Opsi jawaban
+            // Pilihan jawaban
             Column(
               children:
                   ['A', 'B', 'C', 'D'].map((option) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(vertical: 6),
+                    final isSelected = selectedOption == option;
+                    return AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      margin: const EdgeInsets.symmetric(vertical: 8),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
+                        color: isSelected ? Colors.blue.shade50 : Colors.white,
                         border: Border.all(
                           color:
-                              selectedOption == option
+                              isSelected
                                   ? Colors.blueAccent
                                   : Colors.grey.shade300,
                         ),
-                        color:
-                            selectedOption == option
-                                ? Colors.blue.shade50
-                                : Colors.white,
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       child: RadioListTile<String>(
+                        value: option,
+                        groupValue: selectedOption,
+                        activeColor: Colors.blueAccent,
                         title: Text(
                           quiz['option_${option.toLowerCase()}'] ?? '-',
                           style: const TextStyle(fontSize: 16),
                         ),
-                        value: option,
-                        groupValue: selectedOption,
                         onChanged: (val) {
                           setState(() {
                             selectedOption = val;
                             isAnswered = true;
                           });
                         },
-                        activeColor: Colors.blueAccent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
                       ),
                     );
                   }).toList(),
@@ -186,24 +208,24 @@ class _QuizScreenState extends State<QuizScreen> {
 
             const SizedBox(height: 32),
 
-            // Tombol
+            // Tombol kirim
             ElevatedButton.icon(
               onPressed: isAnswered ? submitAnswer : null,
               icon: Icon(
                 currentIndex == quizzes.length - 1
-                    ? Icons.check
-                    : Icons.arrow_forward,
+                    ? Icons.check_circle
+                    : Icons.arrow_forward_ios_rounded,
               ),
               label: Text(
                 currentIndex == quizzes.length - 1 ? "Selesai" : "Selanjutnya",
                 style: const TextStyle(fontSize: 16),
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
+                backgroundColor: isAnswered ? Colors.blueAccent : Colors.grey,
                 foregroundColor: Colors.white,
                 minimumSize: const Size(double.infinity, 50),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(14),
                 ),
               ),
             ),

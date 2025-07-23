@@ -42,34 +42,64 @@ class ProductBottomBar extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () async {
-              final prefs = await SharedPreferences.getInstance();
-              final userId = int.tryParse(prefs.getString('id') ?? '') ?? 0;
+              try {
+                final prefs = await SharedPreferences.getInstance();
+                final userId = int.tryParse(prefs.getString('id') ?? '') ?? 0;
+                final apotekId = this.apotekId; // pastikan ini ada di class
 
-              final url = Uri.parse(
-                'http://mediquick.my.id/chatbox/create_or_get_chat.php',
-              );
-              final response = await http.post(
-                url,
-                body: {
-                  'user_id': userId.toString(),
-                  'apotek_profiles.id': apotekId.toString(),
-                },
-              );
+                if (userId == 0 || apotekId == 0) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('ID pengguna atau apotek tidak valid'),
+                    ),
+                  );
+                  return;
+                }
 
-              final data = jsonDecode(response.body);
-              if (data['success']) {
-                final chatId = int.parse(data['chat_id'].toString());
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder:
-                        (_) => ChatScreen(
-                          userId: userId,
-                          apotekId: apotekId,
-                          chatId: chatId,
-                          isApotek: false,
-                        ),
-                  ),
+                final url = Uri.parse(
+                  'http://mediquick.my.id/chatbox/create_or_get_chat.php',
+                );
+                final response = await http.post(
+                  url,
+                  body: {
+                    'user_id': userId.toString(),
+                    'apotek_id': apotekId.toString(), // ✅ BENAR
+                  },
+                );
+
+                if (response.statusCode == 200) {
+                  final data = jsonDecode(response.body);
+                  if (data['success']) {
+                    final chatId = int.parse(data['chat_id'].toString());
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (_) => ChatScreen(
+                              userId: userId,
+                              apotekId: apotekId,
+                              chatId: chatId,
+                              isApotek: false,
+                            ),
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Gagal membuka chat: ${data['message']}'),
+                      ),
+                    );
+                  }
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Server error saat membuat chat'),
+                    ),
+                  );
+                }
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Terjadi kesalahan: $e')),
                 );
               }
             },

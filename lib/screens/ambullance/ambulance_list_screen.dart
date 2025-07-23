@@ -39,6 +39,7 @@ class _AmbulanceListScreenState extends State<AmbulanceListScreen> {
         final result = json.decode(response.body);
 
         if (result['success']) {
+          if (!mounted) return; // ✅ CEK mounted sebelum setState
           setState(() {
             final data = result['data'];
             ambulances = data is List ? data : [data];
@@ -51,15 +52,14 @@ class _AmbulanceListScreenState extends State<AmbulanceListScreen> {
         throw Exception('Data dari server tidak valid:\n${response.body}');
       }
     } catch (e) {
+      if (!mounted) return; // ✅ CEK mounted sebelum setState
       setState(() {
         isLoading = false;
       });
 
-      if (context.mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Gagal memuat data: $e")));
-      }
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Gagal memuat data: $e")));
     }
   }
 

@@ -111,6 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
               }),
             )
             .timeout(const Duration(seconds: 10));
+        print("Raw response body: ${response.body}");
 
         final dynamic data = jsonDecode(response.body);
 
@@ -164,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
       await prefs.setString('userData', jsonEncode(userData));
       await prefs.setString('role', role);
       await prefs.setString('id', userData['id'].toString());
-      await prefs.setString('nama', userData['nama'].toString());
+      await prefs.setString('nama', userData['name'].toString());
       await prefs.setString('email', userData['email'].toString());
 
       if (role == 'apotek') {
@@ -294,10 +295,6 @@ class _LoginScreenState extends State<LoginScreen> {
         _buildRememberMeSection(),
         const SizedBox(height: 10),
         _buildLoginButton(),
-        const SizedBox(height: 25),
-        const _OrDivider(),
-        const SizedBox(height: 25),
-        _buildSocialLoginButtons(),
         const SizedBox(height: 20),
         const _RegisterPrompt(),
       ],
@@ -368,28 +365,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildSocialLoginButtons() {
-    return Column(
-      children: [
-        SocialLoginButton(
-          text: "Masuk dengan Facebook",
-          iconPath: "assets/icons/facebook.png",
-          onPressed: () => _handleSocialLogin('facebook'),
-        ),
-        const SizedBox(height: 16),
-        SocialLoginButton(
-          text: "Masuk dengan Google",
-          iconPath: "assets/icons/google.png",
-          onPressed: () => _handleSocialLogin('google'),
-        ),
-      ],
-    );
-  }
-
-  void _handleSocialLogin(String provider) {
-    // Implement social login logic
-  }
-
   Widget _buildLoadingOverlay() {
     return Container(
       height: double.infinity,
@@ -414,24 +389,6 @@ class _LoginScreenState extends State<LoginScreen> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _OrDivider extends StatelessWidget {
-  const _OrDivider();
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        const Expanded(child: Divider(thickness: 2)),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Text("Atau dengan", style: TextStyle(color: Colors.grey[600])),
-        ),
-        const Expanded(child: Divider(thickness: 2)),
-      ],
     );
   }
 }

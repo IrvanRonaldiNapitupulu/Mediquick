@@ -39,7 +39,6 @@ class _CourseFormState extends State<CourseForm> {
     request.files.add(
       await http.MultipartFile.fromPath('file', imageFile.path),
     );
-
     final response = await request.send();
     final responseBody = await response.stream.bytesToString();
     final decoded = json.decode(responseBody);
@@ -60,6 +59,39 @@ class _CourseFormState extends State<CourseForm> {
     final isEdit = module != null;
 
     List<Map<String, String>> quizList = [];
+
+    if (isEdit && module['quizzes'] != null) {
+      final rawQuizzes = module['quizzes'];
+
+      List<dynamic> parsedQuizzes;
+
+      if (rawQuizzes is String) {
+        try {
+          parsedQuizzes = jsonDecode(rawQuizzes);
+        } catch (e) {
+          parsedQuizzes = [];
+          debugPrint('Gagal decode quizzes: $e');
+        }
+      } else if (rawQuizzes is List) {
+        parsedQuizzes = rawQuizzes;
+      } else {
+        parsedQuizzes = [];
+      }
+
+      quizList =
+          parsedQuizzes
+              .map<Map<String, String>>(
+                (q) => {
+                  'question': q['question']?.toString() ?? '',
+                  'option_a': q['option_a']?.toString() ?? '',
+                  'option_b': q['option_b']?.toString() ?? '',
+                  'option_c': q['option_c']?.toString() ?? '',
+                  'option_d': q['option_d']?.toString() ?? '',
+                  'correct_option': q['correct_option']?.toString() ?? '',
+                },
+              )
+              .toList();
+    }
 
     await showDialog(
       context: context,
@@ -133,6 +165,7 @@ class _CourseFormState extends State<CourseForm> {
                       ),
                       const SizedBox(height: 8),
 
+                      // Kuis list
                       ...quizList.asMap().entries.map((entry) {
                         int index = entry.key;
                         var quiz = entry.value;
@@ -167,7 +200,6 @@ class _CourseFormState extends State<CourseForm> {
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 6),
                                 TextField(
                                   decoration: const InputDecoration(
                                     labelText: 'Pertanyaan',
@@ -316,26 +348,75 @@ class _CourseFormState extends State<CourseForm> {
                       horizontal: 12,
                       vertical: 6,
                     ),
-                    child: ListTile(
-                      leading: Image.network(
-                        m['thumbnail_url'],
-                        width: 50,
-                        height: 50,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => const Icon(Icons.image),
-                      ),
-                      title: Text(m['title']),
-                      subtitle: Text(m['description']),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 4,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          IconButton(
-                            onPressed: () => showModuleForm(module: m),
-                            icon: const Icon(Icons.edit, color: Colors.orange),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.network(
+                              m['thumbnail_url'],
+                              width: 80,
+                              height: 80,
+                              fit: BoxFit.cover,
+                              errorBuilder:
+                                  (_, __, ___) =>
+                                      const Icon(Icons.image, size: 80),
+                            ),
                           ),
-                          IconButton(
-                            onPressed: () => deleteModule(m['id'].toString()),
-                            icon: const Icon(Icons.delete, color: Colors.red),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  m['title'] ?? '',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  m['description'] ?? '',
+                                  style: TextStyle(color: Colors.grey[700]),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    IconButton(
+                                      onPressed:
+                                          () => showModuleForm(module: m),
+                                      icon: const Icon(
+                                        Icons.edit,
+                                        color: Colors.orange,
+                                      ),
+                                      tooltip: 'Edit',
+                                    ),
+                                    IconButton(
+                                      onPressed:
+                                          () =>
+                                              deleteModule(m['id'].toString()),
+                                      icon: const Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
+                                      ),
+                                      tooltip: 'Hapus',
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),

@@ -23,9 +23,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Future<void> _validateAndRegister() async {
     if (_formKey.currentState!.validate()) {
-      final url = Uri.parse(
-        "http://mediquick.my.id/add_users.php",
-      );
+      final url = Uri.parse("http://mediquick.my.id/add_users.php");
       try {
         final response = await http.post(
           url,
@@ -37,6 +35,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             "name": _nameController.text.trim(),
             "email": _emailController.text.trim(),
             "password": _passwordController.text.trim(),
+            "role": "user", // tambahkan default role
           }),
         );
 
@@ -186,43 +185,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Divider(thickness: 2, color: Colors.black),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Text(
-                          "Atau dengan",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Divider(thickness: 2, color: Colors.black),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  RegisterSocialButton(
-                    text: "Masuk dengan Facebook",
-                    iconPath: "assets/icons/facebook.png",
-                    onPressed: () {
-                      print("Login dengan Facebook");
-                    },
-                  ),
-                  const SizedBox(height: 12),
-                  RegisterSocialButton(
-                    text: "Masuk dengan Google",
-                    iconPath: "assets/icons/google.png",
-                    onPressed: () {
-                      print("Login dengan Google");
-                    },
                   ),
                   const SizedBox(height: 20),
                   Center(

@@ -11,6 +11,8 @@ class EducationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -23,10 +25,13 @@ class EducationCard extends StatelessWidget {
       child: Card(
         color: const Color(0xFF88A9D3),
         elevation: 4,
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Gambar Thumbnail
             ClipRRect(
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(16),
@@ -35,38 +40,60 @@ class EducationCard extends StatelessWidget {
               child: Image.network(
                 article.imageUrl,
                 fit: BoxFit.cover,
-                height: 150,
+                height: screenWidth * 0.30,
                 width: double.infinity,
-                errorBuilder: (context, error, stackTrace) => const Icon(
-                  Icons.broken_image,
-                  size: 100,
-                  color: Colors.grey,
-                ),
+                errorBuilder:
+                    (context, error, stackTrace) => Container(
+                      height: screenWidth * 0.45,
+                      color: Colors.grey[300],
+                      child: const Center(
+                        child: Icon(
+                          Icons.broken_image,
+                          size: 60,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
               ),
             ),
+
+            // Informasi Artikel
             Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.fromLTRB(12, 12, 12, 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Judul
                   Text(
                     article.title,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    article.author,
-                    style: const TextStyle(fontSize: 13, color: Colors.white70),
-                  ),
-                  Text(
-                    _formatDate(article.publishedDate),
-                    style: const TextStyle(fontSize: 12, color: Colors.white70),
+                  const SizedBox(height: 8),
+
+                  // Penulis dan Tanggal
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          article.author,
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(color: Colors.white70),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        _formatDate(article.publishedDate),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodySmall?.copyWith(color: Colors.white70),
+                      ),
+                    ],
                   ),
                 ],
               ),

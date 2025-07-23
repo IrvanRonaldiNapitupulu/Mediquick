@@ -61,116 +61,164 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> {
             backgroundColor: const Color(0xFFF5F6FA),
             appBar: AppBar(
               title: Text(widget.title),
-              backgroundColor: Colors.blueAccent,
+              backgroundColor: const Color(0xFF88A9D3),
+              elevation: 0,
             ),
-            body: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Image.network(
-                    widget.imageUrl,
-                    width: double.infinity,
-                    height: 200,
-                    fit: BoxFit.cover,
-                    errorBuilder:
-                        (_, __, ___) =>
-                            const Icon(Icons.broken_image, size: 100),
-                    loadingBuilder: (context, child, progress) {
-                      if (progress == null) return child;
-                      return Container(
-                        height: 200,
-                        color: Colors.grey[200],
-                        child: const Center(child: CircularProgressIndicator()),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 20),
-
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.title,
-                          style: const TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF2D3142),
-                          ),
+            body: Stack(
+              children: [
+                // Konten Scrollable
+                SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Gambar Thumbnail
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.network(
+                          widget.imageUrl,
+                          height: 200,
+                          fit: BoxFit.cover,
+                          errorBuilder:
+                              (_, __, ___) =>
+                                  const Icon(Icons.broken_image, size: 100),
+                          loadingBuilder: (context, child, progress) {
+                            if (progress == null) return child;
+                            return Container(
+                              height: 200,
+                              color: Colors.grey[200],
+                              child: const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            );
+                          },
                         ),
-                        const SizedBox(height: 10),
-                        Text(
+                      ),
+                      const SizedBox(height: 20),
+
+                      // Judul
+                      Text(
+                        widget.title,
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF2D3142),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+
+                      // Deskripsi
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 4,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Text(
                           widget.description,
                           style: const TextStyle(
                             fontSize: 16,
                             color: Colors.black87,
                           ),
                         ),
-                        const SizedBox(height: 20),
+                      ),
+                      const SizedBox(height: 24),
 
-                        const Text(
-                          "🎥 Tonton Video Pembelajaran:",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
+                      // Video
+                      const Text(
+                        "🎥 Tonton Video Pembelajaran",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
                         ),
-                        const SizedBox(height: 12),
+                      ),
+                      const SizedBox(height: 12),
 
-                        _isYoutubeValid
-                            ? ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: AspectRatio(
-                                aspectRatio: 16 / 9,
-                                child: player,
-                              ),
-                            )
-                            : Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: Colors.red[50],
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Text(
-                                "⚠️ Video tidak tersedia atau link tidak valid.",
-                                style: TextStyle(color: Colors.red),
-                              ),
+                      _isYoutubeValid
+                          ? ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: AspectRatio(
+                              aspectRatio: 16 / 9,
+                              child: player,
                             ),
-
-                        const SizedBox(height: 30),
-                        Center(
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (_) => QuizScreen(moduleId: widget.id),
-                                ),
-                              );
-                            },
-                            icon: const Icon(Icons.quiz),
-                            label: const Text("Mulai Kuis"),
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 24,
-                                vertical: 12,
-                              ),
-                              backgroundColor: Colors.blueAccent,
-                              foregroundColor: Colors.white,
-                              textStyle: const TextStyle(fontSize: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
+                          )
+                          : Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.red[50],
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Text(
+                              "⚠️ Video tidak tersedia atau link tidak valid.",
+                              style: TextStyle(color: Colors.red),
                             ),
                           ),
+
+                      const SizedBox(height: 30),
+                    ],
+                  ),
+                ),
+
+                // Tombol "Mulai Kuis" Mengambang
+                Positioned(
+                  bottom: 50,
+                  left: 16,
+                  right: 16,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => QuizScreen(moduleId: widget.id),
                         ),
-                        const SizedBox(height: 40),
-                      ],
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF4A90E2), Color(0xFF007AFF)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.blue.withOpacity(0.3),
+                            offset: const Offset(0, 4),
+                            blurRadius: 10,
+                          ),
+                        ],
+                      ),
+                      child: const Center(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.quiz_outlined, color: Colors.white),
+                            SizedBox(width: 10),
+                            Text(
+                              "Mulai Kuis",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 17,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
     );

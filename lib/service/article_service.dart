@@ -13,7 +13,9 @@ class ArticleService {
     if (response.statusCode == 200) {
       final body = json.decode(response.body);
 
-      if (body is Map<String, dynamic> && body['status'] == true && body.containsKey('data')) {
+      if (body is Map<String, dynamic> &&
+          body['status'] == true &&
+          body.containsKey('data')) {
         return (body['data'] as List)
             .map((json) => Article.fromJson(Map<String, dynamic>.from(json)))
             .toList();
@@ -39,7 +41,8 @@ class ArticleService {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data['status'] == true) {
-          return article.copyWith(id: data['id']);
+          final newId = int.tryParse(data['id'].toString()) ?? 0;
+          return article.copyWith(id: newId);
         } else {
           throw Exception(data['error'] ?? 'Gagal membuat artikel');
         }
