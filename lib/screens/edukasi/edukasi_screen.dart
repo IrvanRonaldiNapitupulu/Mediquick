@@ -1,10 +1,10 @@
 // screens/edukasi/edukasi_screen.dart
 import 'package:flutter/material.dart';
-import 'package:mediquick/admin/model/article_model.dart';
-import 'package:mediquick/service/article_service.dart';
-import 'package:mediquick/widget/edukasi/education_card.dart';
-import 'package:mediquick/widget/edukasi/education_filter_buttons.dart';
-import 'package:mediquick/widget/edukasi/education_search_bar.dart';
+import 'package:mediquick/models/article_model.dart';
+import 'package:mediquick/services/article_service.dart';
+import 'package:mediquick/widgets/edukasi/education_card.dart';
+import 'package:mediquick/widgets/edukasi/education_filter_buttons.dart';
+import 'package:mediquick/widgets/edukasi/education_search_bar.dart';
 
 class EducationScreen extends StatefulWidget {
   const EducationScreen({super.key});

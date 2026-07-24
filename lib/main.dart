@@ -1,24 +1,20 @@
-// main.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/date_symbol_data_local.dart'; // ⬅️ Tambahkan ini
-import 'package:mediquick/widget/apotek/Cart_Provider.dart';
-import 'package:mediquick/admin/admin_dashboard.dart';
-import 'package:mediquick/apotek_role/apotek_dashboard.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:mediquick/core/theme/app_theme.dart';
+import 'package:mediquick/providers/cart_provider.dart';
+import 'package:mediquick/screens/admin/admin_dashboard_screen.dart';
+import 'package:mediquick/screens/apotek_role/apotek_dashboard_screen.dart';
 import 'package:mediquick/screens/splash_screen.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // ⬅️ Wajib sebelum await
-  await initializeDateFormatting(
-    'id_ID',
-    null,
-  ); // ⬅️ Inisialisasi format lokal Indonesia
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('id_ID', null);
 
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => CartProvider()),
-        // Tambahkan provider lain di sini jika dibutuhkan
       ],
       child: const MediQuick(),
     ),
@@ -33,17 +29,11 @@ class MediQuick extends StatelessWidget {
     return MaterialApp(
       title: 'MediQuick',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: const Color(0xFFF5F6FA),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: SplashScreen(), // Pastikan SplashScreen sudah ada
-      // Rute navigasi global
+      theme: AppTheme.lightTheme,
+      home: SplashScreen(),
       routes: {
         '/admin': (context) => const AdminDashboardScreen(),
         '/apotek': (context) => const ApotekDashboardScreen(),
-        // Tambah route lain jika perlu
       },
     );
   }

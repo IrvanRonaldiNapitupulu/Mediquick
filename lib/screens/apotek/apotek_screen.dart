@@ -1,10 +1,10 @@
 // screens/apotek/apotek_screen.dart
 import 'package:flutter/material.dart';
-import 'package:mediquick/widget/apotek/category_section.dart';
-import 'package:mediquick/widget/apotek/header.dart';
-import 'package:mediquick/widget/apotek/image_carousel_apotek.dart';
-import 'package:mediquick/widget/apotek/popular_products_section.dart.dart';
-import 'package:mediquick/widget/apotek/search_bar.dart';
+import 'package:mediquick/widgets/apotek/category_section.dart';
+import 'package:mediquick/widgets/apotek/header.dart';
+import 'package:mediquick/widgets/apotek/image_carousel_apotek.dart';
+import 'package:mediquick/widgets/apotek/popular_products_section.dart';
+import 'package:mediquick/widgets/apotek/search_bar_widget.dart';
 
 class ApotekScreen extends StatelessWidget {
   const ApotekScreen({super.key});

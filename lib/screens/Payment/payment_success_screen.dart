@@ -1,4 +1,4 @@
-// screens/Payment/payment_success_screen.dart
+// screens/payment/payment_success_screen.dart
 import 'package:flutter/material.dart';
 
 class PaymentSuccessScreen extends StatelessWidget {
@@ -18,7 +18,6 @@ class PaymentSuccessScreen extends StatelessWidget {
             const SizedBox(height: 12),
             ElevatedButton(
               onPressed: () {
-                // Redirect ke riwayat atau dashboard
                 Navigator.popUntil(context, (route) => route.isFirst);
               },
               child: const Text("Kembali ke Beranda"),

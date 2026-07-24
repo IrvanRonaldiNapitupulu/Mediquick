@@ -1,4 +1,4 @@
-// screens/Payment/Payment_Screen.dart
+// screens/payment/payment_screen.dart
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 

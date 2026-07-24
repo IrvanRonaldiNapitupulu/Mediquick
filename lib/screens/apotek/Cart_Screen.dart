@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mediquick/screens/apotek/checkout_screen.dart';
-import 'package:mediquick/widget/apotek/Cart_Provider.dart';
+import 'package:mediquick/providers/cart_provider.dart';
 import 'package:provider/provider.dart';
 
 String formatRupiah(int amount) {

@@ -1,8 +1,8 @@
 // screens/dashboard/dashboard_screen.dart
 import 'package:flutter/material.dart';
-import 'package:mediquick/widget/dashboard/category_section.dart';
-import 'package:mediquick/widget/dashboard/greeting_section.dart';
-import 'package:mediquick/widget/dashboard/image_carousel.dart';
+import 'package:mediquick/widgets/dashboard/category_section.dart';
+import 'package:mediquick/widgets/dashboard/greeting_section.dart';
+import 'package:mediquick/widgets/dashboard/image_carousel.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});

@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:mediquick/screens/Payment/Payment_Screen.dart';
+import 'package:mediquick/screens/payment/payment_screen.dart';
 import 'package:mediquick/screens/apotek/address_screen.dart';
 import 'package:mediquick/screens/apotek/apotek_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mediquick/service/order_service.dart';
+import 'package:mediquick/services/order_service.dart';
 
 String formatRupiah(int amount) {
   final formatter = NumberFormat.currency(

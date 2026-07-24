@@ -1,15 +1,16 @@
 // screens/apotek/produk_detail_screen.dart
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:mediquick/core/constants/api_constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:mediquick/screens/apotek/checkout_screen.dart';
-import 'package:mediquick/widget/apotek/produk/product_bottom_bar.dart';
-import 'package:mediquick/widget/apotek/produk/product_description_section.dart';
-import 'package:mediquick/widget/apotek/produk/product_image_section.dart';
-import 'package:mediquick/widget/apotek/produk/product_info_section.dart';
-import 'package:mediquick/widget/apotek/produk/product_pharmacy_info.dart';
-import 'package:mediquick/widget/apotek/produk/product_quantity_section.dart';
-import 'package:mediquick/model/product.dart';
+import 'package:mediquick/widgets/apotek/produk/product_bottom_bar.dart';
+import 'package:mediquick/widgets/apotek/produk/product_description_section.dart';
+import 'package:mediquick/widgets/apotek/produk/product_image_section.dart';
+import 'package:mediquick/widgets/apotek/produk/product_info_section.dart';
+import 'package:mediquick/widgets/apotek/produk/product_pharmacy_info.dart';
+import 'package:mediquick/widgets/apotek/produk/product_quantity_section.dart';
+import 'package:mediquick/models/product_model.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final int productId;
@@ -34,7 +35,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   Future<void> _fetchProductDetail() async {
     final url = Uri.parse(
-      'http://mediquick.my.id/products/read_detail.php?id=${widget.productId}',
+      '${ApiConstants.productsReadDetail}?id=${widget.productId}',
     );
 
     try {

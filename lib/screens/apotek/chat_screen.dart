@@ -2,8 +2,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:mediquick/core/constants/api_constants.dart';
 import 'package:http/http.dart' as http;
-import 'package:mediquick/model/chat_message.dart';
+import 'package:mediquick/models/chat_message_model.dart';
 
 class ChatScreen extends StatefulWidget {
   final int userId;
@@ -48,7 +49,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<void> initChat() async {
     final url = Uri.parse(
-      'http://mediquick.my.id/chatbox/create_or_get_chat.php',
+      ApiConstants.chatCreateOrGet,
     );
     try {
       final response = await http.post(
@@ -76,7 +77,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Future<void> loadMessages() async {
     if (chatId == 0) return;
     final url = Uri.parse(
-      'http://mediquick.my.id/chatbox/get_messages.php?chat_id=$chatId',
+      '${ApiConstants.chatGetMessages}?chat_id=$chatId',
     );
     try {
       final response = await http.get(url);
@@ -106,7 +107,7 @@ class _ChatScreenState extends State<ChatScreen> {
     setState(() => isLoading = true);
 
     final url = Uri.parse(
-      'http://mediquick.my.id/chatbox/chat_send_message.php',
+      ApiConstants.chatSendMessage,
     );
     try {
       final response = await http.post(

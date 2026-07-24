@@ -1,6 +1,7 @@
 // screens/apotek/user_chat_list_screen.dart
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:mediquick/core/constants/api_constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:mediquick/screens/apotek/chat_screen.dart';
 
@@ -24,7 +25,7 @@ class _UserChatListScreenState extends State<UserChatListScreen> {
   }
 
   Future<void> fetchChatList() async {
-    final url = Uri.parse('http://mediquick.my.id/chatbox/get_chats_by_user.php?user_id=${widget.userId}');
+    final url = Uri.parse('${ApiConstants.chatGetByUser}?user_id=${widget.userId}');
     try {
       final response = await http.get(url);
       final data = jsonDecode(response.body);

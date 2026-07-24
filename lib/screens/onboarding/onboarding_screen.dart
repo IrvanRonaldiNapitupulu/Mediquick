@@ -1,8 +1,8 @@
 // screens/onboarding/onboarding_screen.dart
 import 'package:flutter/material.dart';
-import 'package:mediquick/screens/login/login_screen.dart';
-import 'package:mediquick/widget/onboarding/onboarding_data.dart';
-import 'package:mediquick/widget/onboarding/onboarding_widget.dart';
+import 'package:mediquick/screens/auth/login_screen.dart';
+import 'package:mediquick/widgets/onboarding/onboarding_data.dart';
+import 'package:mediquick/widgets/onboarding/onboarding_widget.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
