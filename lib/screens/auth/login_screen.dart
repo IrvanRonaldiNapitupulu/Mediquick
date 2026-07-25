@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -53,6 +54,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> afterLoginSuccess() async {
     try {
+      if (kIsWeb) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('alamat_user', 'Jakarta, Indonesia');
+        await prefs.setDouble('latitude_user', -6.2088);
+        await prefs.setDouble('longitude_user', 106.8456);
+        return;
+      }
       final position = await LocationService.determinePosition();
       final address = await LocationService.getAddressFromPosition(position);
       final prefs = await SharedPreferences.getInstance();
@@ -63,6 +71,10 @@ class _LoginScreenState extends State<LoginScreen> {
       AppLogger.debug("Alamat tersimpan: $address");
     } catch (e) {
       AppLogger.debug("Gagal ambil lokasi: $e");
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('alamat_user', 'Jakarta, Indonesia');
+      await prefs.setDouble('latitude_user', -6.2088);
+      await prefs.setDouble('longitude_user', 106.8456);
     }
   }
 
