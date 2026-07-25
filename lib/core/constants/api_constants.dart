@@ -1,8 +1,8 @@
 class ApiConstants {
   ApiConstants._();
 
-  static const String baseUrl = 'https://mediquick.my.id';
-  static const String secureBaseUrl = 'https://mediquick.my.id';
+  static const String baseUrl = 'http://localhost:8080/mediquick-backend';
+  static const String secureBaseUrl = 'http://localhost:8080/mediquick-backend';
 
   // Auth
   static const String login = '$baseUrl/login.php';
