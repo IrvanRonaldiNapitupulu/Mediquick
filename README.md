@@ -143,8 +143,6 @@ Terima kasih kepada tim pengembang dan kontributor yang membangun proyek MediQui
 | **4342201047** | Neha Nabillah Putri Hasibuan |
 | **4342201054** | Hammam Abror Rofif |
 
-- **Praktikan Hands-On / Lead Developer**: IrvanRonaldiNapitupulu ([@IrvanRonaldiNapitupulu](https://github.com/KatoPrak))
-- **Program Certification**: CFDA (Fullstack Developer Certification)
 - **Repositori Utama**: [IrvanRonaldiNapitupulu/MediquickFinall](https://github.com/IrvanRonaldiNapitupulu/MediquickFinall)
 
 ---
