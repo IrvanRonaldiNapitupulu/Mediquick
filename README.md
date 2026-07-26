@@ -135,9 +135,17 @@ MediQuick menerapkan prinsip dasar keamanan aplikasi web & mobile modern:
 
 Terima kasih kepada tim pengembang dan kontributor yang membangun proyek MediQuick:
 
-- **Praktikan Hands-On / Lead Developer**: Kato Prakoso ([@KatoPrak](https://github.com/KatoPrak))
+| NIM | Nama Pengembang |
+| :--- | :--- |
+| **4342201040** | Nabilla Meisya Firrandra |
+| **4342201042** | Irvan Ronaldi Napitupulu |
+| **4342201043** | Zahra Zen Marbun |
+| **4342201047** | Neha Nabillah Putri Hasibuan |
+| **4342201054** | Hammam Abror Rofif |
+
+- **Praktikan Hands-On / Lead Developer**: IrvanRonaldiNapitupulu ([@IrvanRonaldiNapitupulu](https://github.com/KatoPrak))
 - **Program Certification**: CFDA (Fullstack Developer Certification)
-- **Repositori Utama**: [KatoPrak/MediquickFinall](https://github.com/KatoPrak/MediquickFinall)
+- **Repositori Utama**: [IrvanRonaldiNapitupulu/MediquickFinall](https://github.com/IrvanRonaldiNapitupulu/MediquickFinall)
 
 ---
 
